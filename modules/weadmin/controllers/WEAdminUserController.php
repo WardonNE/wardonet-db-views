@@ -21,7 +21,7 @@ class WEAdminUserController extends Controller {
                 "class" => AccessControl::className(),
                 "only" => array("login", "index"),
                 "rules" => array(
-                    array("allow" => true, "actions" => array("login"), "roles" => array("?")),
+                    array("allow" => true, "actions" => array("login")),
                     array("allow" => true, "actions" => array("index"), "roles" => array("@")),
                 ),
             ),

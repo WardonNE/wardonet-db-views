@@ -7,6 +7,9 @@ use app\utils\WEHttpClient;
 use app\utils\WEStringBuilder;
 use app\utils\WEParamsUtil;
 use yii\helpers\Json;
+use yii\bootstrap\Dropdown;
+use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 
 class DatabaseList extends Widget {
     
@@ -17,18 +20,12 @@ class DatabaseList extends Widget {
 
         $result = Json::decode($client->get(), true);
         if($result["code"] == 0) {
-            foreach($result["result"] as $key => $database) {
-                echo <<<HTMLBLOCK
-<li>
-    <a href="javascript:;">
-        <i class="iconfont left-nav-li" lay-tips="{$database["schema_name"]}">&#xe6b8;</i>
-        <cite>{$database["schema_name"]}</cite>
-        <i class="iconfont nav_right">&#xe697;</i>
-    </a>
-</li>
-HTMLBLOCK;
-            }
+            echo Html::dropDownList("dbname", null, ArrayHelper::map($result["result"], "schema_name", "schema_name"), $options = array(
+                "lay-search" => "",
+                "lay-verify" => "",
+                "lay-filter" => "database-select",
+                "prompt" => "请选择数据库",
+            ));
         }
     }
-
 }

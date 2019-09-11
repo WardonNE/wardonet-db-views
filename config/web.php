@@ -56,6 +56,9 @@ $config = [
         'weadmin' => [
             'class' => 'app\modules\weadmin\WEAdminModule',
         ],
+        'wedatabase' => [
+            'class' => 'app\modules\wedatabase\WEDatabaseModule',
+        ],
     ],
 ];
 

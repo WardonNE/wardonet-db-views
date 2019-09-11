@@ -14,6 +14,14 @@ use app\modules\weadmin\forms\WEAdminLoginForm;
 class SiteController extends Controller {
 
     public $layout = '@app/views/layouts/adminLayout';
+
+    public function actions() {
+        return [
+            "error" => [
+                "class" => yii\web\ErrorAction::className(),
+            ]
+        ];
+    }
     
     public function actionWelcome() {
         return $this->render('welcome');

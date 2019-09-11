@@ -24,6 +24,5 @@ class WEAdminModule extends \yii\base\Module
                 'class' => 'app\modules\weadmin\controllers\WEAdminUserController',
             ],
         ];
-        // custom initialization code goes here
     }
 }
