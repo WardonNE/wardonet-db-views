@@ -6,4 +6,5 @@ return [
     "serviceHost" => "http://127.0.0.1:7777",
     "serviceDbListApi" => "/db",
     "serviceTableListApi" => "/db/{:dbname}/tables",
+    "serviceTableDataListApi" => "/db/{:dbname}/tables/{:tablename}",
 ];
