@@ -12,6 +12,7 @@ class WETableDataListAction extends Action {
         $builder = new WEStringBuilder(WEParamsUtil::get("serviceHost"));
         $builder->append(WEParamsUtil::get("serviceTableDataList"));
         $builder->replaceSubString("{:dbname}", $form->dbname);
+        $builder->replaoceSubString("{:tablename}", $form->tablename);
     }
 
 }

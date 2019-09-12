@@ -80,6 +80,22 @@ use app\widgets\DatabaseList;
         <script>
             layui.use(["form", "jquery", "layer"], function() {
                 var form = layui.form, $ = layui.jquery, layer = layui.layer;
+                $.ajaxSetup({
+                    layerIndex: -1,
+                    beforeSend: function() {
+                        this.layerIndex = layer.load(0, {shade: [0.5, "#393D49"]});
+                    },
+                    complete: function() {
+                        layer.close(this.layerIndex);
+                    },
+                    error: function() {
+                        layer.alert("数据加载出现错误,请刷新页面重试", {
+                            skin: "layui-layer-molv",
+                            closeBtn: 0,
+                            shift: 4
+                        });
+                    },
+                });
                 form.on('select(database-select)', function(data){
                     var dbname = data.value;
                     $.post("/wedatabase/db/tablelist?dbname=" + dbname, {
