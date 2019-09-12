@@ -13,7 +13,12 @@ use yii\helpers\ArrayHelper;
 
 class DatabaseList extends Widget {
     
+    public $dbname = null;
+
+    public $tablename = null;
+
     public function run() {
+
         $builder = new WEStringBuilder(WEParamsUtil::get("serviceHost"));
         $builder->append(WEParamsUtil::get("serviceDbListApi"));
         $client = new WEHttpClient($builder->toString());

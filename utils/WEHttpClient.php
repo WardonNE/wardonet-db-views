@@ -45,4 +45,7 @@ class WEHttpClient {
         return curl_error($this->ch);
     }
 
+    public function getStatusCode() {
+        return curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
+    }
 }

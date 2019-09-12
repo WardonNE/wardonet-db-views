@@ -5,7 +5,8 @@ namespace app\modules\wedatabase\controllers;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use app\modules\wedatabase\actions\WETableListAction;
-
+use app\modules\wedatabase\actions\WETableDataListAction;
+use app\modules\wedatabase\actions\WETableColumnsAction;
 
 /**
  * Default controller for the `wedatabase` module
@@ -17,6 +18,12 @@ class WEDatabaseController extends Controller {
             "tablelist" => array(
                 "class" => WETableListAction::className(),
             ),
+            "datalist" => array(
+                "class" => WETableDataListAction::className(),
+            ),
+            "columns" => array(
+                "class" => WETableColumnsAction::className(),
+            ),
         );
     }
 
@@ -26,9 +33,19 @@ class WEDatabaseController extends Controller {
                 "class" => AccessControl::className(),
                 "only" => array(
                     "tablelist",
+                    "datalist",
+                    "columns",
                 ),
                 "rules" => array(
-                    array("allow" => true, "actions" => array("tablelist"), "roles" => array("@")),
+                    array(
+                        "allow" => true, 
+                        "actions" => array(
+                            "tablelist",
+                            "datalist",
+                            "columns",
+                        ), 
+                        "roles" => array("@")
+                    ),
                 ),
             ),
         );

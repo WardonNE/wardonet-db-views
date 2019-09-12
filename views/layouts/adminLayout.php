@@ -1,5 +1,7 @@
 <?php 
 use app\widgets\DatabaseList;
+use app\utils\WEParamsUtil;
+use app\widgets\HeaderMenu;
 ?>
 <!doctype html>
 <html class="x-admin-sm">
@@ -30,33 +32,8 @@ use app\widgets\DatabaseList;
         <!-- 顶部开始 -->
         <div class="container">
             <div class="logo">
-                <a href="./index.html">X-admin v2.2</a></div>
-            <div class="left_open">
-                <a><i title="展开左侧栏" class="iconfont">&#xe699;</i></a>
+                <a href="/weadmin">WardonET-Db</a>
             </div>
-            <ul class="layui-nav left fast-add" lay-filter="">
-                <li class="layui-nav-item">
-                    <a href="javascript:;">+新增</a>
-                    <dl class="layui-nav-child">
-                        <!-- 二级菜单 -->
-                        <dd>
-                            <a onclick="xadmin.open('最大化','http://www.baidu.com','','',true)">
-                                <i class="iconfont">&#xe6a2;</i>弹出最大化</a></dd>
-                        <dd>
-                            <a onclick="xadmin.open('弹出自动宽高','http://www.baidu.com')">
-                                <i class="iconfont">&#xe6a8;</i>弹出自动宽高</a></dd>
-                        <dd>
-                            <a onclick="xadmin.open('弹出指定宽高','http://www.baidu.com',500,300)">
-                                <i class="iconfont">&#xe6a8;</i>弹出指定宽高</a></dd>
-                        <dd>
-                            <a onclick="xadmin.add_tab('在tab打开','member-list.html')">
-                                <i class="iconfont">&#xe6b8;</i>在tab打开</a></dd>
-                        <dd>
-                            <a onclick="xadmin.add_tab('在tab打开刷新','member-del.html',true)">
-                                <i class="iconfont">&#xe6b8;</i>在tab打开刷新</a></dd>
-                    </dl>
-                </li>
-            </ul>
             <ul class="layui-nav right" lay-filter="">
                 <li class="layui-nav-item">
                     <a href="javascript:;">admin</a>
@@ -70,8 +47,6 @@ use app\widgets\DatabaseList;
                             <a href="./login.html">退出</a></dd>
                     </dl>
                 </li>
-                <li class="layui-nav-item to-index">
-                    <a href="/">前台首页</a></li>
             </ul>
         </div>
         <!-- 顶部结束 -->
@@ -82,7 +57,7 @@ use app\widgets\DatabaseList;
                 var form = layui.form, $ = layui.jquery, layer = layui.layer;
                 $.ajaxSetup({
                     layerIndex: -1,
-                    beforeSend: function() {
+                    beforeSend: function(jqXHR, settings) {
                         this.layerIndex = layer.load(0, {shade: [0.5, "#393D49"]});
                     },
                     complete: function() {
@@ -96,6 +71,39 @@ use app\widgets\DatabaseList;
                         });
                     },
                 });
+                var initLeftNav = function() {
+                    var defaultDbname = "<?php echo isset($_GET["dbname"])?$_GET["dbname"]:""?>", defaultTableName = "<?php echo isset($_GET["tablename"])?$_GET["tablename"]:""?>";
+                    if(defaultDbname != "") {
+                        form.val("database-select-form", {
+                            dbname: defaultDbname,
+                        });
+                        form.render("select", "datanse-select-form");
+                        $.post("/wedatabase/db/tablelist?dbname=" + defaultDbname, {
+                            _csrf: "<?php echo \Yii::$app->request->csrfToken;?>"
+                        }, function(resp) {
+                            if(resp.code == "0") {
+                                var html = "";
+                                for(i = 0; i < resp.result.length; i++) {
+                                    html += "<li>\
+                                        <a class=\"" + resp.result[i].table_name + "\" href=\"/wedatabase/db/datalist?dbname=" + resp.result[i].table_schema + "&tablename=" + resp.result[i].table_name + "\">\
+                                            <cite><i class=\"iconfont left-nav-li layui-icon layui-icon-table\" lay-tips=\"" + resp.result[i].table_name + "\"></i>" + resp.result[i].table_name + "</cite>\
+                                        </a>\
+                                    </li>";
+                                }
+                                $("#nav").html("");
+                                $("#nav").html(html);
+                                if(defaultTableName != "") {
+                                    $("#nav ." + defaultTableName).addClass("active");
+                                }
+                            } else {
+                                layer.open({
+                                    content: resp.message,
+                                });
+                            }
+                        });
+                    }
+                }
+                initLeftNav();
                 form.on('select(database-select)', function(data){
                     var dbname = data.value;
                     $.post("/wedatabase/db/tablelist?dbname=" + dbname, {
@@ -105,7 +113,7 @@ use app\widgets\DatabaseList;
                             var html = "";
                             for(i = 0; i < resp.result.length; i++) {
                                 html += "<li>\
-                                    <a href=\"javascript:;\">\
+                                    <a class=\"" + resp.result[i].table_name + "\" href=\"/wedatabase/db/datalist?dbname=" + resp.result[i].table_schema + "&tablename=" + resp.result[i].table_name + "\">\
                                         <cite><i class=\"iconfont left-nav-li layui-icon layui-icon-table\" lay-tips=\"" + resp.result[i].table_name + "\"></i>" + resp.result[i].table_name + "</cite>\
                                     </a>\
                                 </li>";
@@ -124,9 +132,11 @@ use app\widgets\DatabaseList;
         <div class="left-nav" style="overflow: scroll">
             <div id="side-nav">
                 <div id="database-select">
-                    <div class="layui-form" style="width: 90%; margin: auto;">
+                    <div class="layui-form" style="width: 90%; margin: auto;" lay-filter="database-select-form">
                         <div class="layui-form-item" >
-                            <?php echo DatabaseList::widget();?>
+                            <?php
+                                echo DatabaseList::widget();
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -141,14 +151,19 @@ use app\widgets\DatabaseList;
             <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
                 <ul class="layui-tab-title">
                     <li class="home">
-                        <i class="layui-icon">&#xe68e;</i>我的桌面</li></ul>
+                        <i class="layui-icon">&#xe68e;</i>
+                        <span>我的桌面</span>
+                    </li>
+                    <?php echo HeaderMenu::Widget();?>
+                </ul>
                 <div class="layui-unselect layui-form-select layui-form-selected" id="tab_right">
                     <dl>
                         <dd data-type="this">关闭当前</dd>
                         <dd data-type="other">关闭其它</dd>
-                        <dd data-type="all">关闭全部</dd></dl>
+                        <dd data-type="all">关闭全部</dd>
+                    </dl>
                 </div>
-                <div class="layui-tab-content">
+                <div class="layui-tab-content" style="overflow: scroll;">
                     <div class="layui-tab-item layui-show">
                         <?php echo $content;?>
                     </div>
