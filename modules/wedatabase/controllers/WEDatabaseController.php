@@ -18,10 +18,10 @@ class WEDatabaseController extends Controller {
             "tablelist" => array(
                 "class" => WETableListAction::className(),
             ),
-            "datalist" => array(
+            "tableview" => array(
                 "class" => WETableDataListAction::className(),
             ),
-            "columns" => array(
+            "tabledesc" => array(
                 "class" => WETableColumnsAction::className(),
             ),
         );

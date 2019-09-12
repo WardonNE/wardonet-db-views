@@ -85,7 +85,7 @@ use app\widgets\HeaderMenu;
                                 var html = "";
                                 for(i = 0; i < resp.result.length; i++) {
                                     html += "<li>\
-                                        <a class=\"" + resp.result[i].table_name + "\" href=\"/wedatabase/db/datalist?dbname=" + resp.result[i].table_schema + "&tablename=" + resp.result[i].table_name + "\">\
+                                        <a class=\"" + resp.result[i].table_name + "\" href=\"/wedatabase/db/tableview?dbname=" + resp.result[i].table_schema + "&tablename=" + resp.result[i].table_name + "&is_db=0&event=view\">\
                                             <cite><i class=\"iconfont left-nav-li layui-icon layui-icon-table\" lay-tips=\"" + resp.result[i].table_name + "\"></i>" + resp.result[i].table_name + "</cite>\
                                         </a>\
                                     </li>";
@@ -106,26 +106,7 @@ use app\widgets\HeaderMenu;
                 initLeftNav();
                 form.on('select(database-select)', function(data){
                     var dbname = data.value;
-                    $.post("/wedatabase/db/tablelist?dbname=" + dbname, {
-                        _csrf: "<?php echo \Yii::$app->request->csrfToken;?>"
-                    }, function(resp) {
-                        if(resp.code == "0") {
-                            var html = "";
-                            for(i = 0; i < resp.result.length; i++) {
-                                html += "<li>\
-                                    <a class=\"" + resp.result[i].table_name + "\" href=\"/wedatabase/db/datalist?dbname=" + resp.result[i].table_schema + "&tablename=" + resp.result[i].table_name + "\">\
-                                        <cite><i class=\"iconfont left-nav-li layui-icon layui-icon-table\" lay-tips=\"" + resp.result[i].table_name + "\"></i>" + resp.result[i].table_name + "</cite>\
-                                    </a>\
-                                </li>";
-                            }
-                            $("#nav").html("");
-                            $("#nav").html(html);
-                        } else {
-                            layer.open({
-                                content: resp.message,
-                            });
-                        }
-                    });
+                    location.href = "/wedatabase/db/tablelist?dbname=" + dbname + "&is_db=1&event=desc";
                 })
             })
         </script>
@@ -154,7 +135,11 @@ use app\widgets\HeaderMenu;
                         <i class="layui-icon">&#xe68e;</i>
                         <span>我的桌面</span>
                     </li>
-                    <?php echo HeaderMenu::Widget();?>
+                    <?php echo HeaderMenu::Widget(array(
+                        "is_db" => isset($_GET["is_db"])?$_GET["is_db"]:0,
+                        "dbname" => isset($_GET["dbname"])?$_GET["dbname"]:"",
+                        "tablename" => isset($_GET["tablename"])?$_GET["tablename"]:"",
+                    ));?>
                 </ul>
                 <div class="layui-unselect layui-form-select layui-form-selected" id="tab_right">
                     <dl>

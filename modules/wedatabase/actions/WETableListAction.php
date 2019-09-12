@@ -17,7 +17,7 @@ class WETableListAction extends Action {
         $form->setAttributes(Yii::$app->request->get());
         if(Yii::$app->request->isGet) {
             if($form->validate()) {
-                return $this->render("tablelist", array(
+                return $this->controller->render("tablelist", array(
                     "dbname" => $form->dbname,
                 ));
             } else {

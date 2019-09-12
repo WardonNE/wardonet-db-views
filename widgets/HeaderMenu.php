@@ -40,11 +40,13 @@ class HeaderMenu extends Widget {
             "label" => "操作",
             "url" => "#",
             "event" => "operation",
+            "icon" => "layui-icon-survey",
         ),
         array(
             "label" => "程序",
             "url" => "#",
             "event" => "program",
+            "icon" => "layui-icon-app",
         ),
         array(
             "label" => "事件",
@@ -65,7 +67,7 @@ class HeaderMenu extends Widget {
             "label" => "浏览",
             "url" => "#",
             "event" => "view",
-            "icon" => "layui-icon-list"
+            "icon" => "layui-icon-list",
         ),
         array(
             "label" => "结构" ,
@@ -110,17 +112,38 @@ class HeaderMenu extends Widget {
             "icon" => "layui-icon-engine",
         ),
     );
+
+    public $is_db = 0;
+
+    public $tablename;
+
+    public $dbname;
+
     public function run() {
-        foreach($this->tableMenus as $key => $menu) {
-            $activeClassName = $menu["event"] == $_GET["event"]?"layui-this":"";
-            echo <<<HTMLBLOCK
-        <li class="home {$activeClassName}"
-            <a href="{$menu["url"]}">
-                <i class="layui-icon {$menu["icon"]}"></i>
-                <span>{$menu["label"]}</span>
-            </a>
-        </li>
+        if($this->is_db) {
+            foreach($this->databaseMenus as $key => $menu) {
+                $activeClassName = ($menu["event"] == $_GET["event"])?"layui-this":"";
+                echo <<<HTMLBLOCK
+            <li class="home {$activeClassName}">
+                <a href="/wedatabase/db/db{$menu["event"]}?dbname={$this->dbname}&tablename={$this->tablename}&is_db=0&event={$menu["event"]}">
+                    <i class="layui-icon {$menu["icon"]}"></i>
+                    <span>{$menu["label"]}</span>
+                </a>
+            </li>
 HTMLBLOCK;
+            }
+        } else {
+            foreach($this->tableMenus as $key => $menu) {
+                $activeClassName = ($menu["event"] == $_GET["event"])?"layui-this":"";
+                echo <<<HTMLBLOCK
+            <li class="home {$activeClassName}">
+                <a href="/wedatabase/db/table{$menu["event"]}?dbname={$this->dbname}&tablename={$this->tablename}&is_db=0&event={$menu["event"]}">
+                    <i class="layui-icon {$menu["icon"]}"></i>
+                    <span>{$menu["label"]}</span>
+                </a>
+            </li>
+HTMLBLOCK;
+            }
         }
     }
 

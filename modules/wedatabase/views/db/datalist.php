@@ -14,26 +14,6 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <div class="layui-card">
-                <!-- <div class="layui-card-body ">
-                    <form class="layui-form layui-col-space5">
-                        <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="开始日" name="start" id="start">
-                        </div>
-                        <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input"  autocomplete="off" placeholder="截止日" name="end" id="end">
-                        </div>
-                        <div class="layui-inline layui-show-xs-block">
-                            <input type="text" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
-                        </div>
-                        <div class="layui-inline layui-show-xs-block">
-                            <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
-                        </div>
-                    </form>
-                </div> -->
-                <!-- <div class="layui-card-header">
-                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-                    <button class="layui-btn" onclick="xadmin.open('添加用户','./admin-add.html',600,400)"><i class="layui-icon"></i>添加</button>
-                </div> -->
                 <div class="layui-card-body ">
                     <table class="layui-table layui-form" id="<?php echo $dbname;?>-<?php echo $tablename;?>-data" lay-filter="<?php echo $dbname;?>-<?php echo $tablename;?>-data">
                     </table>
@@ -48,21 +28,25 @@
         table.render({
             elem: "#<?php echo $dbname?>-<?php echo $tablename?>-data",
             method: "post",
-            url: "/wedatabase/db/datalist?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>",
+            url: "/wedatabase/db/tableview?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>",
             page: false,
             cols: [[]],
             where: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
             done: function(resp, pageno, limit) {
                 var cols = new Array();
-                for (var field in resp.data[0]) {
-                    if(field == "LAY_TABLE_INDEX") {
-                        continue;
+                if(resp.data == null) {
+                    
+                } else {
+                    for (var field in resp.data[0]) {
+                        if(field == "LAY_TABLE_INDEX") {
+                            continue;
+                        }
+                        cols.push({
+                            field: field,
+                            title: field,
+                            sort: true,
+                        });
                     }
-                    cols.push({
-                        field: field,
-                        title: field,
-                        sort: true,
-                    });
                 }
                 table.init("<?php echo $dbname?>-<?php echo $tablename?>-data", {
                     cols: [cols],
