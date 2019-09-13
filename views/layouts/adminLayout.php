@@ -53,6 +53,18 @@ use app\widgets\HeaderMenu;
         <!-- 中部开始 -->
         <!-- 左侧菜单开始 -->
         <script>
+            function htmlEscape(text){ 
+                return text.replace(/[<>"&]/g, function(match, pos, originalText) {
+                        switch(match){
+                        case "<": return "&lt;"; 
+                        case ">":return "&gt;";
+                        case "&":return "&amp;"; 
+                        case "\"":return "&quot;"; 
+                    } 
+                }); 
+            }
+        </script>
+        <script>
             layui.use(["form", "jquery", "layer"], function() {
                 var form = layui.form, $ = layui.jquery, layer = layui.layer;
                 $.ajaxSetup({

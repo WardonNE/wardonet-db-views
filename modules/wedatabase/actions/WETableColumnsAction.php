@@ -17,7 +17,7 @@ class WETableColumnsAction extends Action {
         $form->setAttributes(Yii::$app->request->get());
         if(Yii::$app->request->isGet) {
             if($form->validate()) {
-                return $this->render("datalist", array(
+                return $this->controller->render("columns", array(
                     "dbname" => $form->dbname,
                     "tablename" => $form->tablename,
                 ));

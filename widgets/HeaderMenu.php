@@ -120,6 +120,9 @@ class HeaderMenu extends Widget {
     public $dbname;
 
     public function run() {
+        if(!$this->dbname) {
+            echo "";exit();
+        }
         if($this->is_db) {
             foreach($this->databaseMenus as $key => $menu) {
                 $activeClassName = ($menu["event"] == $_GET["event"])?"layui-this":"";

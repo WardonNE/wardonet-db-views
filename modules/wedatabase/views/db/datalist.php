@@ -34,34 +34,41 @@
             where: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
             done: function(resp, pageno, limit) {
                 var cols = new Array();
-                if(resp.data == null) {
-                    
-                } else {
-                    for (var field in resp.data[0]) {
-                        if(field == "LAY_TABLE_INDEX") {
-                            continue;
+                $.post("/wedatabase/db/tabledesc?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>", {
+                    _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+                }, function(response) {
+                    if(response.code == 0) {
+                        for(i = 0; i < response.result.length; i++) {
+                            cols.push({
+                                field: response.result[i].column_name,
+                                title: response.result[i].column_name,
+                                sort: true,
+                            });
                         }
-                        cols.push({
-                            field: field,
-                            title: field,
-                            sort: true,
-                        });
+                        table.init("<?php echo $dbname?>-<?php echo $tablename?>-data", {
+                            cols: [cols],
+                            data: resp.data,
+                            count: resp.count,
+                            page: true,
+                            limit: 10,
+                        })
                     }
-                }
-                table.init("<?php echo $dbname?>-<?php echo $tablename?>-data", {
-                    cols: [cols],
-                    data: resp.data,
-                    count: resp.count,
-                    page: true,
-                    limit: 10,
-                })
+                })                
             },
             parseData: function(resp) {
+                var data = new Array();
+                for(i = 0; i < resp.result.list.length; i++) {
+                    var indata = new Object();
+                    for(var field in resp.result.list[i]) {
+                        indata[field] = htmlEscape(resp.result.list[i][field]);
+                    }
+                    data.push(indata);
+                }
                 return {
                     code: resp.code,
                     msg: resp.message,
                     count: resp.result.total,
-                    data: resp.result.list,
+                    data: data,
                 };
             }
         });
