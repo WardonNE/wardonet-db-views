@@ -22,57 +22,45 @@
         </div>
     </div>
 </div> 
+<script type="text/html">
+    <button class="layui-btn" lay-event="edit">编辑</button>
+    <button class="layui-btn" lay-event="delete">删除</button>
+    <button class="layui-btn" lay-event="pk">主键</button>
+    <button class="layui-btn" lay-event="unique">唯一</button>
+    <button class="layui-btn" lay-event="index">索引</button>
+    <button class="layui-btn" lay-event="space">空间</button>
+    <button class="layui-btn" lay-event="full-text-search">全文搜索</button>
+    <button class="layui-btn" lay-event="distinct">非重复值(DISTINCT)</button>
+</script>
 <script>
     layui.use(["table", "jquery", "layer"], function() {
         var $ = layui.jquery, table = layui.table, layer = layui.layer;
         table.render({
-            elem: "#<?php echo $dbname?>-<?php echo $tablename?>-data",
+            elem: "#<?php echo $dbname?>-<?php echo $tablename?>-columns",
             method: "post",
-            url: "/wedatabase/db/tableview?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>",
+            url: "/wedatabase/db/tabledesc?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>",
             page: false,
+            where: {
+                _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+            },
             cols: [[
-                {field: "", },
+                {title:"ID",type:"numbers"},
+                {title:"名称",field:"column_name"},
+                {title:"类型",field:"column_type"},
+                {title:"排序规则",field:"collation_name"},
+                {title:"空",field:"is_nullable"},
+                {title:"默认",field:"column_default"},
+                {title:"额外",field:"extra"},
+                {title:"操作",toolbar:"#<?php echo $dbname;?>-<?php echo $tablename;?>-toolbar"}
             ]],
-            where: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
-            // done: function(resp, pageno, limit) {
-            //     var cols = new Array();
-            //     $.post("/wedatabase/db/tabledesc?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>", {
-            //         _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
-            //     }, function(response) {
-            //         if(response.code == 0) {
-            //             for(i = 0; i < response.result.length; i++) {
-            //                 cols.push({
-            //                     field: response.result[i].column_name,
-            //                     title: response.result[i].column_name,
-            //                     sort: true,
-            //                 });
-            //             }
-            //             table.init("<?php echo $dbname?>-<?php echo $tablename?>-data", {
-            //                 cols: [cols],
-            //                 data: resp.data,
-            //                 count: resp.count,
-            //                 page: true,
-            //                 limit: 10,
-            //             })
-            //         }
-            //     })                
-            // },
-            // parseData: function(resp) {
-            //     var data = new Array();
-            //     for(i = 0; i < resp.result.list.length; i++) {
-            //         var indata = new Object();
-            //         for(var field in resp.result.list[i]) {
-            //             indata[field] = htmlEscape(resp.result.list[i][field]);
-            //         }
-            //         data.push(indata);
-            //     }
-            //     return {
-            //         code: resp.code,
-            //         msg: resp.message,
-            //         count: resp.result.total,
-            //         data: data,
-            //     };
-            // }
+            parseData: function(resp) {
+                return {
+                    total: resp.result.length,
+                    data: resp.result,
+                    code: resp.code,
+                    msg: resp.message,
+                };
+            }
         });
     })
 </script>

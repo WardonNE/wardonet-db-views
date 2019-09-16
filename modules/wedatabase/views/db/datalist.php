@@ -57,12 +57,14 @@
             },
             parseData: function(resp) {
                 var data = new Array();
-                for(i = 0; i < resp.result.list.length; i++) {
-                    var indata = new Object();
-                    for(var field in resp.result.list[i]) {
-                        indata[field] = htmlEscape(resp.result.list[i][field]);
+                if(resp.result.list != null) {
+                    for(i = 0; i < resp.result.list.length; i++) {
+                        var indata = new Object();
+                        for(var field in resp.result.list[i]) {
+                            indata[field] = resp.result.list[i][field] != null ? htmlEscape(resp.result.list[i][field]) : resp.result.list[i][field];
+                        }
+                        data.push(indata);
                     }
-                    data.push(indata);
                 }
                 return {
                     code: resp.code,

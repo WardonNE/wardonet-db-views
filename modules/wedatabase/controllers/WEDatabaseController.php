@@ -33,16 +33,16 @@ class WEDatabaseController extends Controller {
                 "class" => AccessControl::className(),
                 "only" => array(
                     "tablelist",
-                    "datalist",
-                    "columns",
+                    "tableview",
+                    "tabledesc",
                 ),
                 "rules" => array(
                     array(
                         "allow" => true, 
                         "actions" => array(
                             "tablelist",
-                            "datalist",
-                            "columns",
+                            "tableview",
+                            "tabledesc",
                         ), 
                         "roles" => array("@")
                     ),
