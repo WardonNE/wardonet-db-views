@@ -9,6 +9,7 @@ class WEHttpClient {
     public function __construct($url) {
         $this->ch = curl_init($url);
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($this->ch, CURLOPT_PROXY, false);
     }
 
     public function __destruct() {

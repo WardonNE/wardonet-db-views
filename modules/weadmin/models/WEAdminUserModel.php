@@ -2,10 +2,10 @@
 namespace app\modules\weadmin\models;
 
 use yii\web\IdentityInterface;
-use yii\base\Object;
+use yii\base\BaseObject;
 use Yii;
 
-class WEAdminUserModel extends Object implements IdentityInterface {
+class WEAdminUserModel extends BaseObject implements IdentityInterface {
 
     public $id;
     public $username;

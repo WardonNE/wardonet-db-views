@@ -7,6 +7,7 @@ use yii\filters\AccessControl;
 use app\modules\wedatabase\actions\WETableListAction;
 use app\modules\wedatabase\actions\WETableDataListAction;
 use app\modules\wedatabase\actions\WETableColumnsAction;
+use app\modules\wedatabase\actions\WEDatabaseSqlAction;
 
 /**
  * Default controller for the `wedatabase` module
@@ -24,6 +25,9 @@ class WEDatabaseController extends Controller {
             "tabledesc" => array(
                 "class" => WETableColumnsAction::className(),
             ),
+            "dbsql" => array(
+                "class" => WEDatabaseSqlAction::className(),
+            ),
         );
     }
 
@@ -35,6 +39,7 @@ class WEDatabaseController extends Controller {
                     "tablelist",
                     "tableview",
                     "tabledesc",
+                    "dbsql",
                 ),
                 "rules" => array(
                     array(
@@ -43,6 +48,7 @@ class WEDatabaseController extends Controller {
                             "tablelist",
                             "tableview",
                             "tabledesc",
+                            "dbsql",
                         ), 
                         "roles" => array("@")
                     ),
