@@ -49,7 +49,7 @@ class WETableColumnsAction extends Action {
                     $cache->set("{$form->dbname}-{$form->tablename}-columns", $response["result"]);
                     return WEJSONResponser::response(0, "ok", $response["result"]);
                 } else {
-                    return WEJSONResponser::response(1002, "远程服务返回错误", $response["result"]);
+                    return WEJSONResponser::response(1002, "远程服务返回错误", false);
                 }
             } else {
                 throw new NotFoundHttpException();

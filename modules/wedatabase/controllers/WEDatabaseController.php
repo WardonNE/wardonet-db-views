@@ -8,6 +8,7 @@ use app\modules\wedatabase\actions\WETableListAction;
 use app\modules\wedatabase\actions\WETableDataListAction;
 use app\modules\wedatabase\actions\WETableColumnsAction;
 use app\modules\wedatabase\actions\WEDatabaseSqlAction;
+use app\modules\wedatabase\actions\WESqlLintAction;
 
 /**
  * Default controller for the `wedatabase` module
@@ -27,6 +28,9 @@ class WEDatabaseController extends Controller {
             ),
             "dbsql" => array(
                 "class" => WEDatabaseSqlAction::className(),
+            ),
+            "lint" => array(
+                "class" => WESqlLintAction::className(),
             ),
         );
     }

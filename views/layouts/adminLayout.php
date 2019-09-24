@@ -26,8 +26,20 @@ use app\widgets\HeaderMenu;
             // 是否开启刷新记忆tab功能
             // var is_remember = false;
         </script>
+
+        <link rel="stylesheet" href="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/lib/codemirror.css"/>
+        <link rel="stylesheet" href="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/hint/show-hint.css">
+        <link rel="stylesheet" href="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/theme/idea.css"/>
+        <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/lib/codemirror.js"></script>
+        <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/hint/show-hint.js"></script>
+        <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/hint/sql-hint.js"></script>
+        <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/mode/sql/sql.js"></script>
+        <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/mode/clike/clike.js"></script>
+        <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/display/autorefresh.js"></script>
+        <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/edit/matchbrackets.js"></script>
+        <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/display/fullscreen.js"></script>
     </head>
-    <style>::-webkit-scrollbar{display: none;}</style>
+    <style>::-webkit-scrollbar{/** display: none; */}</style>
     <body class="index">
         <!-- 顶部开始 -->
         <div class="container">
@@ -95,10 +107,10 @@ use app\widgets\HeaderMenu;
                         }, function(resp) {
                             if(resp.code == "0") {
                                 var html = "";
-                                for(i = 0; i < resp.result.length; i++) {
+                                for(i = 0; i < resp.result.list.length; i++) {
                                     html += "<li>\
-                                        <a class=\"" + resp.result[i].table_name + "\" href=\"/wedatabase/db/tableview?dbname=" + resp.result[i].table_schema + "&tablename=" + resp.result[i].table_name + "&is_db=0&event=view\">\
-                                            <cite><i class=\"iconfont left-nav-li layui-icon layui-icon-table\" lay-tips=\"" + resp.result[i].table_name + "\"></i>" + resp.result[i].table_name + "</cite>\
+                                        <a class=\"" + resp.result.list[i].table_name + "\" href=\"/wedatabase/db/tableview?dbname=" + resp.result.list[i].table_schema + "&tablename=" + resp.result.list[i].table_name + "&is_db=0&event=view\">\
+                                            <cite><i class=\"iconfont left-nav-li layui-icon layui-icon-table\" lay-tips=\"" + resp.result.list[i].table_name + "\"></i>" + resp.result.list[i].table_name + "</cite>\
                                         </a>\
                                     </li>";
                                 }

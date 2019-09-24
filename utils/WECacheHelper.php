@@ -10,6 +10,7 @@ class WECacheHelper {
 
     public function __construct($timeout = 3600) {
         $this->cache = Yii::$app->cache;
+        $this->timeout = 3600;
     }
 
     public function set($key, $data) {

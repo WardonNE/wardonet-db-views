@@ -13,10 +13,10 @@ use yii\web\NotFoundHttpException;
 class WEDatabaseSqlAction extends Action {
     public function run() {
         $form = new WEDatabaseSqlForm();
-        $form->setAttributes(Yii::$app->request->post());
         if(Yii::$app->request->isGet) {
+            $form->setAttributes($_GET);
             if($form->dbname) {
-                $this->controller->render("dbsql", array(
+                return $this->controller->render("dbsql", array(
                     "dbname" => $form->dbname,
                 ));
             } else {

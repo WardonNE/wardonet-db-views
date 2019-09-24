@@ -1,4 +1,3 @@
-
 <div class="x-nav">
     <span class="layui-breadcrumb">
     <!-- <a href="">é¦–é¡µ</a> -->
@@ -20,12 +19,12 @@
     </div>
 </div> 
 <script type="text/html" id="<?php echo $dbname?>-toolbar">
-    <button class="layui-btn">浏览</button>
-    <button class="layui-btn">结构</button>
-    <button class="layui-btn">搜索</button>
-    <button class="layui-btn">插入</button>
-    <button class="layui-btn">清空</button>
-    <button class="layui-btn">删除</button>
+    <button class="layui-btn" lay-event="view">浏览</button>
+    <button class="layui-btn" lay-event="desc">结构</button>
+    <button class="layui-btn" lay-event="search">搜索</button>
+    <button class="layui-btn" lay-event="insert">插入</button>
+    <button class="layui-btn layui-btn-danger" lay-event="deleteall">清空</button>
+    <button class="layui-btn layui-btn-danger" lay-event="drop">删除</button>
 </script>
 <script>
     layui.use(["table", "jquery", "layer"], function() {
@@ -46,10 +45,10 @@
             where: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
             parseData: function(resp) {
                 return {
-                    count: resp.result.length,
+                    count: resp.result.list.length,
                     code: resp.code,
                     msg: resp.message,
-                    data: resp.result,
+                    data: resp.result.list,
                 };
             }
         });

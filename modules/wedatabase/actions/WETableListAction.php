@@ -11,6 +11,7 @@ use app\utils\WEParamsUtil;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
 use app\utils\WECacheHelper;
+use app\utils\WESignatureHelper;
 
 class WETableListAction extends Action {
     public function run() {
@@ -28,14 +29,16 @@ class WETableListAction extends Action {
             if($form->validate()) {
                 $cache = new WECacheHelper();
                 $data = $cache->get("{$form->dbname}-tables");
-                if($data !== false) {
+                if($data != false) {
                     return WEJSONResponser::response(0, "ok(data from cache)", $data);
                 }
                 $builder = new WEStringBuilder(WEParamsUtil::get("serviceHost"));
                 $builder->append(WEParamsUtil::get("serviceTableListApi"))->replaceSubString("{:dbname}", $form->dbname);
+                $builder->append("?")->append((new WESignatureHelper())->getSdk());
                 $client = new WEHttpClient($builder->toString());
                 $response = $client->get();
                 if($response === false) return WEJSONResponser::response(1001, $client->getError($ch), $result);
+                if($client->getStatusCode() != 200) return WEJSONResponser::response(1002, "远程服务返回错误", false);
                 $response = Json::decode($response);
                 if($response["code"] == 0) {
                     $cache->set("{$form->dbname}-tables", $response["result"]);

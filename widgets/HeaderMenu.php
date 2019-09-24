@@ -128,7 +128,7 @@ class HeaderMenu extends Widget {
                 $activeClassName = ($menu["event"] == $_GET["event"])?"layui-this":"";
                 echo <<<HTMLBLOCK
             <li class="home {$activeClassName}">
-                <a href="/wedatabase/db/db{$menu["event"]}?dbname={$this->dbname}&tablename={$this->tablename}&is_db=0&event={$menu["event"]}">
+                <a href="/wedatabase/db/db{$menu["event"]}?dbname={$this->dbname}&tablename={$this->tablename}&is_db=1&event={$menu["event"]}">
                     <i class="layui-icon {$menu["icon"]}"></i>
                     <span>{$menu["label"]}</span>
                 </a>

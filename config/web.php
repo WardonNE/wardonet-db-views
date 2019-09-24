@@ -11,6 +11,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
+    'defaultRoute' => '/weadmin',
     'layout' => '@app/views/layouts/adminLayout',
     'components' => [
         'request' => [
