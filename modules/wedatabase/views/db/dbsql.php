@@ -23,8 +23,8 @@
     </div>
 </div>
 <script>
-layui.use(["jquery"], function() {
-    var $ = layui.jquery;
+layui.use(["jquery", "layer"], function() {
+    var $ = layui.jquery, layer = layui.layer;
     function ignoreInputCode(code) {
         for(var i = 0;i < code.length;i++) {
             if(code[i] != " " || !code[i]) {
@@ -87,12 +87,10 @@ layui.use(["jquery"], function() {
             }
         });
     })
-    $(".error-info").each(function() {
-        $(this).hover(function () {
-            console.log("enter");
-        }, function () {
-            console.log("out");
-        })
+
+    $(".error-info").parent().on("click", function(event) {
+        var that = this;
+        layer.tips("error", that);
     });
 })
 </script>
