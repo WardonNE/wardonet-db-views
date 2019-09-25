@@ -9,6 +9,7 @@ use app\modules\wedatabase\actions\WETableDataListAction;
 use app\modules\wedatabase\actions\WETableColumnsAction;
 use app\modules\wedatabase\actions\WEDatabaseSqlAction;
 use app\modules\wedatabase\actions\WESqlLintAction;
+use app\modules\wedatabase\actions\WESqlFormatAction;
 
 /**
  * Default controller for the `wedatabase` module
@@ -32,6 +33,9 @@ class WEDatabaseController extends Controller {
             "lint" => array(
                 "class" => WESqlLintAction::className(),
             ),
+            "sqlfmt" => array(
+                "class" => WESqlFormatAction::className(),
+            ),
         );
     }
 
@@ -44,6 +48,8 @@ class WEDatabaseController extends Controller {
                     "tableview",
                     "tabledesc",
                     "dbsql",
+                    "lint",
+                    "sqlfmt",
                 ),
                 "rules" => array(
                     array(
@@ -53,6 +59,8 @@ class WEDatabaseController extends Controller {
                             "tableview",
                             "tabledesc",
                             "dbsql",
+                            "lint",
+                            "sqlfmt",
                         ), 
                         "roles" => array("@")
                     ),

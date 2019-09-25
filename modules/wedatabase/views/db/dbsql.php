@@ -1,6 +1,3 @@
-
-
-
 <div class="x-nav">
     <span class="layui-breadcrumb">
     <a href="#">database: <?php echo $dbname; ?></a>
@@ -20,11 +17,23 @@
                 </div>
             </div>
         </div>
+        <div class="layui-form-item btn-group-content">
+            <div class="btn-group">
+                <button class="layui-btn sql-clean">清除</button>
+                <button class="layui-btn sql-fmt">格式</button>
+                <button class="layui-btn sql-run">执行</button>
+            </div>
+        </div>
     </div>
 </div>
-
+<style>
+.CodeMirror{border: 1px #999 solid;}
+.CodeMirror-linenumbers{width: 50px;}
+.btn-group-content .btn-group{float: right;margin-right: 20px;}
+</style>
 <script>
 layui.use(["jquery", "layer"], function() {
+    var tables = new Object;
     var $ = layui.jquery, layer = layui.layer;
     function ignoreInputCode(code) {
         for(var i = 0;i < code.length;i++) {
@@ -50,10 +59,7 @@ layui.use(["jquery", "layer"], function() {
         autoRefresh: true,
         hintOptions: {
             completeSingle: false,
-            tables: {
-                "t_test_login": [ "col_a", "col_B", "col_C" ],
-                "t_test_employee": [ "other_columns1", "other_columns2" ]
-            },
+            tables: tables,
         },
         extraKeys: {
         }
@@ -66,14 +72,6 @@ layui.use(["jquery", "layer"], function() {
             }
         }
     });
-
-    function showTips(message, obj) {
-        layer.open({
-            type: 4,
-            content: [message, obj],
-        });
-    }
-
     $(".CodeMirror").eq(0).on("keyup", function(event) {
         $.ajax({
             type: "POST",
@@ -88,17 +86,55 @@ layui.use(["jquery", "layer"], function() {
                 $(".CodeMirror-code .CodeMirror-linenumber .layui-icon").remove();
                 for(var key in resp.result) {
                     if(resp.result[key].length > 0) {
-                        var str = "<i class='layui-icon' style='color: red' onmouseenter='layer.open({type: 4, content: [\"";
+                        var str = "<i class='layui-icon' style='color: red;' onclick='layer.open({type: 4, content: [\"";
                         for(var j = 0; j < resp.result[key].length; j++) {
                             str += resp.result[key][j].message + "</br>";
                         }
                         str += "\", $(this)], tips:[3, \"#666\"]})'>&#xe702;</i>";
-                        console.log(str);
                         $(".CodeMirror-code .CodeMirror-linenumber").eq(parseInt(key)).html(str + " " + (parseInt(key) + 1));
                     }
                 }
             }
         });
     })
+    $(".sql-clean").on("click", function() {
+        sqlCodeMirror.setValue("");
+    })
+    $(".sql-fmt").on("click", function() {
+        $.post("/wedatabase/db/sqlfmt", {
+            _csrf: "<?php echo \Yii::$app->request->csrfToken; ?>",
+            sql: sqlCodeMirror.getValue(),
+        }, function(resp) {
+            if(resp.code == 0) {
+                if(resp.result.formattedSQL != null) {
+                    sqlCodeMirror.setValue(resp.result.formattedSQL);
+                }
+            } else if(resp.code == 422) {
+                var errorInfo = new Array();
+                for(var i = 0; i < resp.result.length; i++) {
+                    for(var j = 0; j < resp.result[i].length; j++) {
+                        errorInfo.append(resp.result[i][j]);
+                    }
+                }
+                popup(errorInfo.Join("</br>"));
+            }
+        });
+    })
+    function loadTables() {
+        $.post("/wedatabase/db/tablelist?dbname=<?php echo $dbname;?>", {
+            _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+        }, function(resp) {
+            if(resp.code == 0) {
+                for(var i = 0; i < resp.result.list.length; i++) {
+                    tables[resp.result.list[i].table_name] = new Array();
+                    $.post("/wedatabase/db/tabledesc?dbname=<?php echo $dbname;?>&tablename=" + resp.result.list[i].table_name, {
+                        _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+                    }, function(response) {
+                        console.log(response);
+                    }) 
+                }
+            }
+        })
+    }
 })
 </script>

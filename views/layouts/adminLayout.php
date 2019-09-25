@@ -132,6 +132,12 @@ use app\widgets\HeaderMenu;
                     var dbname = data.value;
                     location.href = "/wedatabase/db/tablelist?dbname=" + dbname + "&is_db=1&event=desc";
                 })
+                function popup(message) {
+                    layer.open({
+                        type: 1,
+                        content: message,
+                    });
+                }
             })
         </script>
         <div class="left-nav" style="overflow: scroll">
