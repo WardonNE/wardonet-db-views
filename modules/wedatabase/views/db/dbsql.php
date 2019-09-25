@@ -22,6 +22,7 @@
         </div>
     </div>
 </div>
+
 <script>
 layui.use(["jquery", "layer"], function() {
     var $ = layui.jquery, layer = layui.layer;
@@ -66,6 +67,13 @@ layui.use(["jquery", "layer"], function() {
         }
     });
 
+    function showTips(message, obj) {
+        layer.open({
+            type: 4,
+            content: [message, obj],
+        });
+    }
+
     $(".CodeMirror").eq(0).on("keyup", function(event) {
         $.ajax({
             type: "POST",
@@ -77,20 +85,20 @@ layui.use(["jquery", "layer"], function() {
             dataType: "json",
             beforeSend: function() {},
             success: function (resp) {
-                if(resp.result.length == 0) {
-                    $(".CodeMirror-code .CodeMirror-linenumber .error-info").remove();
-                } else {
-                    for(var i = 0;i < resp.result.length;i++) {
-                        $(".CodeMirror-code .CodeMirror-linenumber").eq(resp.result[i].fromLine).html("<i class='layui-icon-tips layui-icon error-info' style='color:red'></i> " + (resp.result[i].fromLine + 1));
+                $(".CodeMirror-code .CodeMirror-linenumber .layui-icon").remove();
+                for(var key in resp.result) {
+                    if(resp.result[key].length > 0) {
+                        var str = "<i class='layui-icon' style='color: red' onmouseenter='layer.open({type: 4, content: [\"";
+                        for(var j = 0; j < resp.result[key].length; j++) {
+                            str += resp.result[key][j].message + "</br>";
+                        }
+                        str += "\", $(this)], tips:[3, \"#666\"]})'>&#xe702;</i>";
+                        console.log(str);
+                        $(".CodeMirror-code .CodeMirror-linenumber").eq(parseInt(key)).html(str + " " + (parseInt(key) + 1));
                     }
                 }
             }
         });
     })
-
-    $(".error-info").parent().on("click", function(event) {
-        var that = this;
-        layer.tips("error", that);
-    });
 })
 </script>

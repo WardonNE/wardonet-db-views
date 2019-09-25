@@ -9,6 +9,7 @@ use app\utils\WEParamsUtil;
 use app\modules\wedatabase\forms\WETableDataListForm;
 use yii\helpers\Json;
 use app\utils\WEJSONResponser;
+use app\utils\WECacheHelper;
 
 class WETableDataListAction extends Action {
 
