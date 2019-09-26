@@ -26,7 +26,7 @@
         </div>
     </div>
 </div>
-<div class="layui-fluid" id="errors-card">
+<div class="layui-fluid">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <h3>SQL语句</h3></br>
@@ -36,7 +36,7 @@
         </div>
     </div>
 </div>
-<div class="layui-fluid" id="errors-card">     
+<div class="layui-fluid">     
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <h3>错误信息</h3></br>
@@ -46,7 +46,7 @@
         </div>
     </div>
 </div>
-<div class="layui-fluid" id="result-card" >
+<div class="layui-fluid">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md12">
             <h3>执行结果</h3></br>
@@ -183,28 +183,33 @@ layui.use(["jquery", "layer", "table"], function() {
                         limit: 10, 
                     })
                 } else {
-                    $("#<?php echo $dbname;?>-query-sql-list").text("影响了" + resp.result.affectrows + "行</br>SQL语句: " + resp.result.querysql);
+                    $("#<?php echo $dbname;?>-query-sql-list").html("影响了" + resp.result.affectrows + "行</br>SQL语句: " + resp.result.querysql);
                 }
             } else if(resp.code == 422) {
+                $("#<?php echo $dbname;?>-query-sql-list").text();
                 $("#<?php echo $dbname;?>-query-sql").text(sqlCodeMirror.getValue());
                 var errInfo = "";
                 for(var field in resp.result) {
                     for(var i = 0; i < resp.result[field].length; i++) {
                         for(var j = 0; j < resp.result[field][i].length; j++) {
-                            errInfo += resp.result[field][i][j][0] + "(near '" + resp.result[field][i][j][2] + "')";
+                            errInfo += resp.result[field][i][j][0] + "(near '" + resp.result[field][i][j][2] + "')</br>";
                         }
                     }
                 }
-                $("#errors-card").find("#<?php echo $dbname;?>-query-sql-errors").text(errInfo);
+                console.log(errInfo);
+                $("#<?php echo $dbname;?>-query-sql-errors").html(errInfo);
             } else if(resp.code == 1002) {
+                $("#<?php echo $dbname;?>-query-sql-list").text();
                 $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);                
                 var errInfo = "";
                 errInfo += resp.result.errorinfo;
-                $("#errors-card").find("#<?php echo $dbname;?>-query-sql-errors").text(errInfo);
+                $("#<?php echo $dbname;?>-query-sql-errors").text(errInfo);
             } else if(resp.code == 1001) {
+                $("#<?php echo $dbname;?>-query-sql-list").text();
                 $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);
                 popup(resp.message);
             } else if(resp.code == 1003) {
+                $("#<?php echo $dbname;?>-query-sql-list").text();
                 $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);
                 popup(resp.message);
             }
