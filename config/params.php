@@ -10,5 +10,6 @@ return [
     "serviceDbListApi" => "/dbs",
     "serviceTableListApi" => "/db/{:dbname}/tbls",
     "serviceTableDataListApi" => "/db/{:dbname}/tables/{:tablename}/data",
-    "serviceTableColumnsApi" => "/db/{:dbname}/tables/{:tablename}/desc",
+    "serviceTableColumnsApi" => "/db/{:dbname}/{:tablename}/cols",
+    "serviceQuerySQLApi" => "/db/{:dbname}/querysql",
 ];

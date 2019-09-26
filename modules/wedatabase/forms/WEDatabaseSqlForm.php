@@ -17,12 +17,8 @@ class WEDatabaseSqlForm extends Model {
     public function sqlParse($attribute, $params) {
         if($this->hasErrors()) return;
         $parser = new WESqlParser($this->sql);
-        $parser->parse();
-        echo "<pre>";
-        print_r($parser->getFormatErrors());
-        echo "</br>";
-        echo $parser->getFormatSql();
-        echo "</pre>";
-        die;
+        if($parser->hasErrors()) {
+            $this->addError("sql", $parser->errors);
+        }
     }
 }

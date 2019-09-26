@@ -11,6 +11,7 @@ use app\modules\wedatabase\forms\WETableColumnsForm;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
 use app\utils\WECacheHelper;
+use app\utils\WESignatureHelper;
 
 class WETableColumnsAction extends Action {
     public function run() {
@@ -31,13 +32,14 @@ class WETableColumnsAction extends Action {
             }
             $cache = new WECacheHelper();
             $data = $cache->get("{$form->dbname}-{$form->tablename}-columns");
-            if($data !== false) {
+            if($data) {
                 return WEJSONResponser::response(0, "ok(data form cache)", $data);
             }
             $builder = new WEStringBuilder(WEParamsUtil::get("serviceHost"));
             $builder->append(WEParamsUtil::get("serviceTableColumnsApi"));
             $builder->replaceSubString("{:dbname}", $form->dbname);
             $builder->replaceSubString("{:tablename}", $form->tablename);
+            $builder->append("?")->append((new WESignatureHelper())->getSdk());
             $client = new WEHttpClient($builder->toString());
             $response = $client->get();
             if($response === false) {

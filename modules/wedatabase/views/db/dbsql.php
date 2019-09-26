@@ -26,15 +26,44 @@
         </div>
     </div>
 </div>
+<div class="layui-fluid" id="errors-card">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <h3>SQL语句</h3></br>
+            <div class="layui-card">
+                <div class="layui-card-body" id="<?php echo $dbname;?>-query-sql"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-fluid" id="errors-card">     
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <h3>错误信息</h3></br>
+            <div class="layui-card">
+                <div class="layui-card-body" id="<?php echo $dbname;?>-query-sql-errors"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-fluid" id="result-card" >
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <h3>执行结果</h3></br>
+            <div class="layui-card">
+                <div class="layui-card-body" id="<?php echo $dbname;?>-query-sql-list"></div>
+            </div>
+        </div>
+    </div>
+</div>
 <style>
 .CodeMirror{border: 1px #999 solid;}
 .CodeMirror-linenumbers{width: 50px;}
 .btn-group-content .btn-group{float: right;margin-right: 20px;}
 </style>
 <script>
-layui.use(["jquery", "layer"], function() {
-    var tables = new Object;
-    var $ = layui.jquery, layer = layui.layer;
+layui.use(["jquery", "layer", "table"], function() {
+    var $ = layui.jquery, layer = layui.layer, table = layui.table;
     function ignoreInputCode(code) {
         for(var i = 0;i < code.length;i++) {
             if(code[i] != " " || !code[i]) {
@@ -59,7 +88,7 @@ layui.use(["jquery", "layer"], function() {
         autoRefresh: true,
         hintOptions: {
             completeSingle: false,
-            tables: tables,
+            tables: loadTables(),
         },
         extraKeys: {
         }
@@ -120,21 +149,102 @@ layui.use(["jquery", "layer"], function() {
             }
         });
     })
-    function loadTables() {
-        $.post("/wedatabase/db/tablelist?dbname=<?php echo $dbname;?>", {
+    $(".sql-run").on("click", function() {
+        $.post("/wedatabase/db/dbsql", {
             _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+            sql: sqlCodeMirror.getValue(),
+            dbname: "<?php echo $dbname;?>",
         }, function(resp) {
             if(resp.code == 0) {
-                for(var i = 0; i < resp.result.list.length; i++) {
-                    tables[resp.result.list[i].table_name] = new Array();
-                    $.post("/wedatabase/db/tabledesc?dbname=<?php echo $dbname;?>&tablename=" + resp.result.list[i].table_name, {
-                        _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
-                    }, function(response) {
-                        console.log(response);
-                    }) 
+                $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);
+                if(resp.result.list != null) {
+                    $("#<?php echo $dbname;?>-query-sql-list").html("<table id='<?php echo $dbname?>-query-sql-list-table' class='layui-table' lay-filter='<?php echo $dbname?>-query-sql-list-table'></table>")
+                    var cols = new Array();
+                    for(var field in resp.result.list[0]) {
+                        cols.push({
+                            field: field,
+                            title: field,
+                            sort: true,
+                        });
+                    }
+                    var data = new Array();
+                    for(i = 0; i < resp.result.list.length; i++) {
+                        var indata = new Object();
+                        for(var field in resp.result.list[i]) {
+                            indata[field] = resp.result.list[i][field] != null ? htmlEscape(resp.result.list[i][field]) : resp.result.list[i][field];
+                        }
+                        data.push(indata);
+                    }
+                    table.init("<?php echo $dbname?>-query-sql-list-table", {
+                        cols: [cols],
+                        data: data,
+                        count: resp.result.list.length,
+                        page: true,
+                        limit: 10, 
+                    })
+                } else {
+                    $("#<?php echo $dbname;?>-query-sql-list").text("影响了" + resp.result.affectrows + "行</br>SQL语句: " + resp.result.querysql);
                 }
+            } else if(resp.code == 422) {
+                $("#<?php echo $dbname;?>-query-sql").text(sqlCodeMirror.getValue());
+                var errInfo = "";
+                for(var field in resp.result) {
+                    for(var i = 0; i < resp.result[field].length; i++) {
+                        for(var j = 0; j < resp.result[field][i].length; j++) {
+                            errInfo += resp.result[field][i][j][0] + "(near '" + resp.result[field][i][j][2] + "')";
+                        }
+                    }
+                }
+                $("#errors-card").find("#<?php echo $dbname;?>-query-sql-errors").text(errInfo);
+            } else if(resp.code == 1002) {
+                $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);                
+                var errInfo = "";
+                errInfo += resp.result.errorinfo;
+                $("#errors-card").find("#<?php echo $dbname;?>-query-sql-errors").text(errInfo);
+            } else if(resp.code == 1001) {
+                $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);
+                popup(resp.message);
+            } else if(resp.code == 1003) {
+                $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);
+                popup(resp.message);
             }
-        })
+        });
+    })
+    function loadTables() {
+        var tables = new Object;
+        $.ajax({
+            type: "POST",
+            url: "/wedatabase/db/tablelist?dbname=<?php echo $dbname;?>",
+            data: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
+            dataType: "json",
+            async: false,
+            success: function (resp) {
+                if(resp.code == 0) {
+                    for(var i = 0; i < resp.result.list.length; i++) {
+                        tables[resp.result.list[i].table_name] = new Array();
+                    }
+                }
+                return;
+            }
+        });
+        for(var tablename in tables) {
+            $.ajax({
+                type: "POST",
+                url: "/wedatabase/db/tabledesc?dbname=<?php echo $dbname;?>&tablename=" + tablename,
+                data: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
+                dataType: "json",
+                async: false,
+                success: function (response) {
+                    if(response.code == 0) {
+                        for(var j = 0; j < response.result.list.length; j++) {
+                            tables[tablename].push(response.result.list[j].column_name);
+                        }
+                    }
+                    return;
+                }
+            });
+        }
+        return tables;
     }
 })
 </script>
