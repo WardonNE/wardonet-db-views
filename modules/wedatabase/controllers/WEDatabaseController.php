@@ -18,7 +18,7 @@ class WEDatabaseController extends Controller {
 
     public function actions() {
         return array(
-            "tablelist" => array(
+            "dbdesc" => array(
                 "class" => WETableListAction::className(),
             ),
             "tableview" => array(

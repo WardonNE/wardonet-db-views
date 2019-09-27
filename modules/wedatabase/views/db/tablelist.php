@@ -22,9 +22,6 @@
     <button class="layui-btn" lay-event="view">浏览</button>
     <button class="layui-btn" lay-event="desc">结构</button>
     <button class="layui-btn" lay-event="search">搜索</button>
-    <button class="layui-btn" lay-event="insert">插入</button>
-    <button class="layui-btn layui-btn-danger" lay-event="deleteall">清空</button>
-    <button class="layui-btn layui-btn-danger" lay-event="drop">删除</button>
 </script>
 <script>
     layui.use(["table", "jquery", "layer"], function() {
@@ -32,7 +29,7 @@
         table.render({
             elem: "#<?php echo $dbname?>-tables",
             method: "post",
-            url: "/wedatabase/db/tablelist?dbname=<?php echo $dbname?>",
+            url: "/wedatabase/db/dbdesc?dbname=<?php echo $dbname?>",
             page: false,
             cols: [[
                 {title:"表",field:"table_name"},
@@ -52,6 +49,20 @@
                 };
             }
         });
+        table.on("tool(<?php echo $dbname;?>-tables)", function(obj) {
+            var event = obj.event, data = obj.data
+            switch(event) {
+                case "view":
+                    location.href = "/wedatabase/db/tableview?dbname=<?php echo $dbname?>&tablename=" + data.table_name + "&is_db=0&event=view";
+                break;
+                case "desc":
+                    location.href = "/wedatabase/db/tabledesc?dbname=<?php echo $dbname?>&tablename=" + data.table_name + "&is_db=0&event=desc";
+                break;
+                case "search":
+                    location.href = "/wedatabase/db/tablesearch?dbname=<?php echo $dbname?>&tablename=" + data.table_name + "&is_db=0&event=search";                
+                break;
+            }
+        })
     })
 </script>
 

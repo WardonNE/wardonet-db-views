@@ -1,6 +1,8 @@
 <?php 
 namespace app\utils;
 
+use app\utils\WEStringBuilder;
+
 class WEUrlBuilder extends WEStringBuilder {
     
     const DEFAULT_PREFIX = 'http';

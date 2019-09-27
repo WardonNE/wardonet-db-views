@@ -19,12 +19,6 @@ class HeaderMenu extends Widget {
             "icon" => "layui-icon-fonts-code",
         ),
         array(
-            "label" => "搜索",
-            "url" => "#",
-            "event" => "search",
-            "icon" => "layui-icon-search",
-        ),
-        array(
             "label" => "导出",
             "url" => "#",
             "event" => "dump",
@@ -41,24 +35,6 @@ class HeaderMenu extends Widget {
             "url" => "#",
             "event" => "operation",
             "icon" => "layui-icon-survey",
-        ),
-        array(
-            "label" => "程序",
-            "url" => "#",
-            "event" => "program",
-            "icon" => "layui-icon-app",
-        ),
-        array(
-            "label" => "事件",
-            "url" => "#",
-            "event" => "event",
-            "icon" => "layui-icon-util",
-        ),
-        array(
-            "label" => "触发器",
-            "url" => "#",
-            "event" => "trigger",
-            "icon" => "layui-icon-engine",
         ),
     );
 

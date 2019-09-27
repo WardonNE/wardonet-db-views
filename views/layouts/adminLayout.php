@@ -102,7 +102,7 @@ use app\widgets\HeaderMenu;
                             dbname: defaultDbname,
                         });
                         form.render("select", "datanse-select-form");
-                        $.post("/wedatabase/db/tablelist?dbname=" + defaultDbname, {
+                        $.post("/wedatabase/db/dbdesc?dbname=" + defaultDbname, {
                             _csrf: "<?php echo \Yii::$app->request->csrfToken;?>"
                         }, function(resp) {
                             if(resp.code == "0") {
@@ -130,7 +130,7 @@ use app\widgets\HeaderMenu;
                 initLeftNav();
                 form.on('select(database-select)', function(data){
                     var dbname = data.value;
-                    location.href = "/wedatabase/db/tablelist?dbname=" + dbname + "&is_db=1&event=desc";
+                    location.href = "/wedatabase/db/dbdesc?dbname=" + dbname + "&is_db=1&event=desc";
                 })
                 function popup(message) {
                     layer.open({

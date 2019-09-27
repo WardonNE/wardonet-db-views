@@ -3,21 +3,23 @@ namespace app\modules\wedatabase\actions;
 
 use Yii;
 use yii\base\Action;
-use app\utils\WEHttpClient;
-use app\utils\WEStringBuilder;
-use app\utils\WEParamsUtil;
-use app\modules\wedatabase\forms\WETableDataListForm;
 use yii\helpers\Json;
-use app\utils\WEJSONResponser;
+use app\utils\WEHttpClient;
+use app\utils\WEParamsUtil;
 use app\utils\WECacheHelper;
+use app\utils\WEJSONResponser;
+use app\utils\WEStringBuilder;
+use app\utils\WESignatureHelper;
+use yii\web\NotFoundHttpException;
+use app\modules\wedatabase\forms\WETableDataListForm;
 
 class WETableDataListAction extends Action {
 
     public function run() {
         $form = new WETableDataListForm();
-        $form->setAttributes(Yii::$app->request->get());
         if(Yii::$app->request->isGet) {
-            if($form->validate()) {
+            $form->setAttributes(Yii::$app->request->get());
+            if($form->dbname and $form->tablename) {
                 return $this->controller->render("datalist", array(
                     "dbname" => $form->dbname,
                     "tablename" => $form->tablename,
@@ -36,8 +38,10 @@ class WETableDataListAction extends Action {
                 $builder->append(WEParamsUtil::get("serviceTableDataListApi"));
                 $builder->replaceSubString("{:dbname}", $form->dbname);
                 $builder->replaceSubString("{:tablename}", $form->tablename);
+                $builder->append("?")->append((new WESignatureHelper())->getSdk());
                 $client = new WEHttpClient($builder->toString());
-                $response = $client->get();
+                $response = $client->post(array(
+                ));
                 if($response === false) {
                     return WEJSONResponser::response(1001, $client->getError(), $response["result"]);
                 } else {
@@ -50,7 +54,7 @@ class WETableDataListAction extends Action {
                             return WEJSONResponser::response(1002, "远程服务返回错误信息", $response["result"]);
                         }
                     } else {
-                        throw new yii\web\HttpException($statusCode);
+                        throw new NotFoundHttpException();
                     }
                 }
             } else {

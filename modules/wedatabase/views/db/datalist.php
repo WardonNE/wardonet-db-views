@@ -29,7 +29,7 @@
             elem: "#<?php echo $dbname?>-<?php echo $tablename?>-data",
             method: "post",
             url: "/wedatabase/db/tableview?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>",
-            page: false,
+            page: true,
             cols: [[]],
             where: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
             done: function(resp, pageno, limit) {
