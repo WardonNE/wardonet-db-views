@@ -75,18 +75,6 @@ class HeaderMenu extends Widget {
             "event" => "import",
             "icon" => "layui-icon-spread-left",
         ),
-        array(
-            "label" => "事件",
-            "url" => "#",
-            "event" => "event",
-            "icon" => "layui-icon-util",
-        ),
-        array(
-            "label" => "触发器",
-            "url" => "#",
-            "event" => "trigger",
-            "icon" => "layui-icon-engine",
-        ),
     );
 
     public $is_db = 0;

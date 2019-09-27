@@ -55,8 +55,8 @@
             ]],
             parseData: function(resp) {
                 return {
-                    total: resp.result.length,
-                    data: resp.result,
+                    total: resp.result.list.length,
+                    data: resp.result.list,
                     code: resp.code,
                     msg: resp.message,
                 };
