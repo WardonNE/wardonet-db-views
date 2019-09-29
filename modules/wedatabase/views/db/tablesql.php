@@ -1,11 +1,12 @@
 <div class="x-nav">
     <span class="layui-breadcrumb">
     <a href="#">database: <?php echo $dbname; ?></a>
+    <a href="#">table: <?php echo $tablename; ?></a>
     <a>
         <cite>sql</cite>
     </a>
     </span>
-    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="åˆ·æ–°">
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" onclick="location.reload()" title="刷新">
     <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i></a>
 </div>
 <div class="layui-fluid">
@@ -13,7 +14,7 @@
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-body">
-                    <textarea name="sql" id="<?php echo $dbname; ?>-sql" style="width: 100%"></textarea>
+                    <textarea name="sql" id="<?php echo $dbname;?>-<?php echo $tablename;?>-sql" style="width: 100%"></textarea>
                 </div>
             </div>
         </div>
@@ -31,7 +32,7 @@
         <div class="layui-col-md12">
             <h3>SQL语句</h3></br>
             <div class="layui-card">
-                <div class="layui-card-body" id="<?php echo $dbname;?>-query-sql"></div>
+                <div class="layui-card-body" id="<?php echo $dbname;?>-<?php echo $tablename;?>-query-sql"></div>
             </div>
         </div>
     </div>
@@ -41,7 +42,7 @@
         <div class="layui-col-md12">
             <h3>错误信息</h3></br>
             <div class="layui-card">
-                <div class="layui-card-body" id="<?php echo $dbname;?>-query-sql-errors"></div>
+                <div class="layui-card-body" id="<?php echo $dbname;?>-<?php echo $tablename;?>-query-sql-errors"></div>
             </div>
         </div>
     </div>
@@ -51,7 +52,7 @@
         <div class="layui-col-md12">
             <h3>执行结果</h3></br>
             <div class="layui-card">
-                <div class="layui-card-body" id="<?php echo $dbname;?>-query-sql-list"></div>
+                <div class="layui-card-body" id="<?php echo $dbname;?>-<?php echo $tablename?>-query-sql-list"></div>
             </div>
         </div>
     </div>
@@ -72,7 +73,7 @@ layui.use(["jquery", "layer", "table"], function() {
         }
         return true;
     }
-    var sqlCodeMirror = CodeMirror.fromTextArea($("#<?php echo $dbname; ?>-sql")[0], {
+    var sqlCodeMirror = CodeMirror.fromTextArea($("#<?php echo $dbname;?>-<?php echo $tablename;?>-sql")[0], {
         mode: "text/x-mysql", //模式
         themes: "idea", //主题
         indentUnit: 4, //缩进单位
@@ -88,7 +89,9 @@ layui.use(["jquery", "layer", "table"], function() {
         autoRefresh: true,
         hintOptions: {
             completeSingle: false,
-            tables: loadTables(),
+            tables: {
+                <?php echo $tablename;?>: loadColumns(),
+            },
         },
         extraKeys: {
         }
@@ -131,7 +134,7 @@ layui.use(["jquery", "layer", "table"], function() {
     })
     $(".sql-fmt").on("click", function() {
         $.post("/wedatabase/db/sqlfmt", {
-            _csrf: "<?php echo \Yii::$app->request->csrfToken; ?>",
+            _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
             sql: sqlCodeMirror.getValue(),
         }, function(resp) {
             if(resp.code == 0) {
@@ -150,15 +153,16 @@ layui.use(["jquery", "layer", "table"], function() {
         });
     })
     $(".sql-run").on("click", function() {
-        $.post("/wedatabase/db/dbsql", {
+        $.post("/wedatabase/db/tablesql", {
             _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
             sql: sqlCodeMirror.getValue(),
             dbname: "<?php echo $dbname;?>",
+            tablename: "<?php echo $tablename;?>",
         }, function(resp) {
             if(resp.code == 0) {
-                $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql").text(resp.result.querysql);
                 if(resp.result.list != null) {
-                    $("#<?php echo $dbname;?>-query-sql-list").html("<table id='<?php echo $dbname?>-query-sql-list-table' class='layui-table' lay-filter='<?php echo $dbname?>-query-sql-list-table'></table>")
+                    $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql-list").html("<table id='<?php echo $dbname?>-<?php echo $tablename?>-query-sql-list-table' class='layui-table' lay-filter='<?php echo $dbname?>-<?php echo $tablename?>-query-sql-list-table'></table>")
                     var cols = new Array();
                     for(var field in resp.result.list[0]) {
                         cols.push({
@@ -175,19 +179,19 @@ layui.use(["jquery", "layer", "table"], function() {
                         }
                         data.push(indata);
                     }
-                    table.init("<?php echo $dbname?>-query-sql-list-table", {
+                    console.log(cols);
+                    table.init("<?php echo $dbname?>-<?php echo $tablename?>-query-sql-list-table", {
                         cols: [cols],
                         data: data,
-                        count: resp.result.list.length,
                         page: true,
                         limit: 10, 
                     })
                 } else {
-                    $("#<?php echo $dbname;?>-query-sql-list").html("影响了" + resp.result.affectrows + "行</br>SQL语句: " + resp.result.querysql);
+                    $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql-list").html("影响了" + resp.result.affectrows + "行</br>SQL语句: " + resp.result.querysql);
                 }
             } else if(resp.code == 422) {
-                $("#<?php echo $dbname;?>-query-sql-list").text();
-                $("#<?php echo $dbname;?>-query-sql").text(sqlCodeMirror.getValue());
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql-list").text();
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql").text(sqlCodeMirror.getValue());
                 var errInfo = "";
                 for(var field in resp.result) {
                     for(var i = 0; i < resp.result[field].length; i++) {
@@ -196,59 +200,40 @@ layui.use(["jquery", "layer", "table"], function() {
                         }
                     }
                 }
-                $("#<?php echo $dbname;?>-query-sql-errors").html(errInfo);
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql-errors").html(errInfo);
             } else if(resp.code == 1002) {
-                $("#<?php echo $dbname;?>-query-sql-list").text();
-                $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);                
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql-list").text();
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql").text(resp.result.querysql);                
                 var errInfo = "";
                 errInfo += resp.result.errorinfo;
-                $("#<?php echo $dbname;?>-query-sql-errors").text(errInfo);
-            } else if(resp.code == 1001) {
-                $("#<?php echo $dbname;?>-query-sql-list").text();
-                $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);
-                popup(resp.message);
-            } else if(resp.code == 1003) {
-                $("#<?php echo $dbname;?>-query-sql-list").text();
-                $("#<?php echo $dbname;?>-query-sql").text(resp.result.querysql);
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql-errors").text(errInfo);
+            } else if(resp.code == 1001 || resp.code == 1003) {
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql-list").text();
+                $("#<?php echo $dbname;?>-<?php echo $tablename?>-query-sql").text(resp.result.querysql);
                 popup(resp.message);
             }
         });
     })
-    function loadTables() {
-        var tables = new Object;
+    function loadColumns() {
+        var columns = new Array();
         $.ajax({
             type: "POST",
-            url: "/wedatabase/db/dbdesc?dbname=<?php echo $dbname;?>",
-            data: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
+            url: "/wedatabase/db/tabledesc?dbname=<?php echo $dbname;?>&tablename=<?php echo $tablename?>",
+            data: {
+                _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+            },
             dataType: "json",
             async: false,
-            success: function (resp) {
-                if(resp.code == 0) {
-                    for(var i = 0; i < resp.result.list.length; i++) {
-                        tables[resp.result.list[i].table_name] = new Array();
+            success: function (response) {
+                if(response.code == 0) {
+                    for(var j = 0; j < response.result.list.length; j++) {
+                        columns.push(response.result.list[j].column_name);
                     }
                 }
                 return;
             }
         });
-        for(var tablename in tables) {
-            $.ajax({
-                type: "POST",
-                url: "/wedatabase/db/tabledesc?dbname=<?php echo $dbname;?>&tablename=" + tablename,
-                data: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
-                dataType: "json",
-                async: false,
-                success: function (response) {
-                    if(response.code == 0) {
-                        for(var j = 0; j < response.result.list.length; j++) {
-                            tables[tablename].push(response.result.list[j].column_name);
-                        }
-                    }
-                    return;
-                }
-            });
-        }
-        return tables;
+        return columns;
     }
 })
 </script>

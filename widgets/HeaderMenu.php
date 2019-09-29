@@ -19,23 +19,17 @@ class HeaderMenu extends Widget {
             "icon" => "layui-icon-fonts-code",
         ),
         array(
-            "label" => "导出",
+            "label" => "备份",
             "url" => "#",
             "event" => "dump",
             "icon" => "layui-icon-shrink-right",
         ),
         array(
-            "label" => "导入",
+            "label" => "恢复",
             "url" => "#",
             "event" => "import",
             "icon" => "layui-icon-spread-left",
-        ),
-        array(
-            "label" => "操作",
-            "url" => "#",
-            "event" => "operation",
-            "icon" => "layui-icon-survey",
-        ),
+        )
     );
 
     public $tableMenus = array(
@@ -58,19 +52,13 @@ class HeaderMenu extends Widget {
             "icon" => "layui-icon-fonts-code",
         ),
         array(
-            "label" => "搜索",
-            "url" => "#",
-            "event" => "search",
-            "icon" => "layui-icon-search",
-        ),
-        array(
-            "label" => "导出",
+            "label" => "备份",
             "url" => "#",
             "event" => "dump",
             "icon" => "layui-icon-shrink-right",
         ),
         array(
-            "label" => "导入",
+            "label" => "恢复",
             "url" => "#",
             "event" => "import",
             "icon" => "layui-icon-spread-left",

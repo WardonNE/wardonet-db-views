@@ -51,7 +51,6 @@
                 {title:"空",field:"is_nullable"},
                 {title:"默认",field:"column_default"},
                 {title:"额外",field:"extra"},
-                {title:"操作",toolbar:"#<?php echo $dbname;?>-<?php echo $tablename;?>-toolbar"}
             ]],
             parseData: function(resp) {
                 return {

@@ -4,12 +4,14 @@ namespace app\modules\wedatabase\controllers;
 
 use yii\web\Controller;
 use yii\filters\AccessControl;
-use app\modules\wedatabase\actions\WETableListAction;
-use app\modules\wedatabase\actions\WETableDataListAction;
-use app\modules\wedatabase\actions\WETableColumnsAction;
-use app\modules\wedatabase\actions\WEDatabaseSqlAction;
 use app\modules\wedatabase\actions\WESqlLintAction;
+use app\modules\wedatabase\actions\WETableSqlAction;
 use app\modules\wedatabase\actions\WESqlFormatAction;
+use app\modules\wedatabase\actions\WETableListAction;
+use app\modules\wedatabase\actions\WEDatabaseSqlAction;
+use app\modules\wedatabase\actions\WETableColumnsAction;
+use app\modules\wedatabase\actions\WETableDataListAction;
+use app\modules\wedatabase\actions\WEDatabaseBackUpAction;
 
 /**
  * Default controller for the `wedatabase` module
@@ -36,6 +38,12 @@ class WEDatabaseController extends Controller {
             "sqlfmt" => array(
                 "class" => WESqlFormatAction::className(),
             ),
+            "tablesql" => array(
+                "class" => WETableSqlAction::className(),
+            ),
+            "dbdump" => array(
+                "class" => WEDatabaseBackUpAction::className(),
+            ), 
         );
     }
 
@@ -50,6 +58,7 @@ class WEDatabaseController extends Controller {
                     "dbsql",
                     "lint",
                     "sqlfmt",
+                    "tablesql",
                 ),
                 "rules" => array(
                     array(
@@ -61,6 +70,7 @@ class WEDatabaseController extends Controller {
                             "dbsql",
                             "lint",
                             "sqlfmt",
+                            "tablesql",
                         ), 
                         "roles" => array("@")
                     ),

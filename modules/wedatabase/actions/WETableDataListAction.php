@@ -28,19 +28,22 @@ class WETableDataListAction extends Action {
                 throw new yii\web\HttpException(404);
             }
         } elseif(Yii::$app->request->isPost) {
+            $form->setAttributes(Yii::$app->request->post());
             if($form->validate()) {
-                $cache = new WECacheHelper();
-                $data = $cache->get("{$form->dbname}-{$form->tablename}-data");
-                if($data !== false) {
-                    return WEJSONResponser::response(0, "ok(data from cache)", $data);
-                }
                 $builder = new WEStringBuilder(WEParamsUtil::get("serviceHost"));
                 $builder->append(WEParamsUtil::get("serviceTableDataListApi"));
                 $builder->replaceSubString("{:dbname}", $form->dbname);
                 $builder->replaceSubString("{:tablename}", $form->tablename);
                 $builder->append("?")->append((new WESignatureHelper())->getSdk());
                 $client = new WEHttpClient($builder->toString());
+                $sqlBuilder = new WEStringBuilder("SELECT * FROM ");
+                $sqlBuilder->append("`{$form->dbname}`.`{$form->tablename}` ");
+                $sqlBuilder->append("LIMIT ");
+                $sqlBuilder->append(($form->page - 1) * $form->limit);
+                $sqlBuilder->append(" ,");
+                $sqlBuilder->append($form->limit);
                 $response = $client->post(array(
+                    "sql" => $sqlBuilder->toString(),
                 ));
                 if($response === false) {
                     return WEJSONResponser::response(1001, $client->getError(), $response["result"]);
@@ -48,7 +51,6 @@ class WETableDataListAction extends Action {
                     if($statusCode = $client->getStatusCode() == 200) {
                         $response = Json::decode($response);
                         if($response["code"] == 0) {
-                            $cache->set("{$form->dbname}-{$form->tablename}-data", $response["result"]);
                             return WEJSONResponser::response(0, "ok", $response["result"]);
                         } else {
                             return WEJSONResponser::response(1002, "远程服务返回错误信息", $response["result"]);

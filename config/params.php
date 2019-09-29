@@ -12,4 +12,5 @@ return [
     "serviceTableDataListApi" => "/db/{:dbname}/{:tablename}/data",
     "serviceTableColumnsApi" => "/db/{:dbname}/{:tablename}/cols",
     "serviceQuerySQLApi" => "/db/{:dbname}/querysql",
+    "serviceDbDumpApi" => "/db/{:dbname}/backup",
 ];

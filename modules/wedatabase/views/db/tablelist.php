@@ -21,7 +21,6 @@
 <script type="text/html" id="<?php echo $dbname?>-toolbar">
     <button class="layui-btn" lay-event="view">浏览</button>
     <button class="layui-btn" lay-event="desc">结构</button>
-    <button class="layui-btn" lay-event="search">搜索</button>
 </script>
 <script>
     layui.use(["table", "jquery", "layer"], function() {
@@ -33,7 +32,7 @@
             page: false,
             cols: [[
                 {title:"表",field:"table_name"},
-                {title:"操作",toolbar:"#<?php echo $dbname;?>-toolbar",width:"22.5%"},
+                {title:"操作",toolbar:"#<?php echo $dbname;?>-toolbar",width:"15%",align:"center"},
                 {title:"行数",field:"table_rows"},
                 {title:"类型",field:"engine"},
                 {title:"排序规则",field:"table_collection"},
@@ -57,9 +56,6 @@
                 break;
                 case "desc":
                     location.href = "/wedatabase/db/tabledesc?dbname=<?php echo $dbname?>&tablename=" + data.table_name + "&is_db=0&event=desc";
-                break;
-                case "search":
-                    location.href = "/wedatabase/db/tablesearch?dbname=<?php echo $dbname?>&tablename=" + data.table_name + "&is_db=0&event=search";                
                 break;
             }
         })

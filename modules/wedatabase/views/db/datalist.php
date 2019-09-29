@@ -25,35 +25,35 @@
 <script>
     layui.use(["table", "jquery", "layer"], function() {
         var $ = layui.jquery, table = layui.table, layer = layui.layer;
+        var cols = new Array();
+        $.ajax({
+            type: "POST",
+            url: "/wedatabase/db/tabledesc?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>",
+            data: {
+                _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+            },
+            dataType: "json",
+            async: false,
+            success: function (resp) {
+                for(i = 0; i < resp.result.list.length; i++) {
+                    cols.push({
+                        field: resp.result.list[i].column_name,
+                        title: resp.result.list[i].column_name,
+                        sort: true,
+                    });
+                }
+            }
+        });
         table.render({
             elem: "#<?php echo $dbname?>-<?php echo $tablename?>-data",
             method: "post",
-            url: "/wedatabase/db/tableview?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>",
+            url: "/wedatabase/db/tableview",
             page: true,
-            cols: [[]],
-            where: {_csrf: "<?php echo \Yii::$app->request->csrfToken;?>"},
-            done: function(resp, pageno, limit) {
-                var cols = new Array();
-                $.post("/wedatabase/db/tabledesc?dbname=<?php echo $dbname?>&tablename=<?php echo $tablename?>", {
-                    _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
-                }, function(response) {
-                    if(response.code == 0) {
-                        for(i = 0; i < response.result.length; i++) {
-                            cols.push({
-                                field: response.result[i].column_name,
-                                title: response.result[i].column_name,
-                                sort: true,
-                            });
-                        }
-                        table.init("<?php echo $dbname?>-<?php echo $tablename?>-data", {
-                            cols: [cols],
-                            data: resp.data,
-                            count: resp.count,
-                            page: true,
-                            limit: 10,
-                        })
-                    }
-                })                
+            cols: [cols],
+            where: {
+                _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+                dbname: "<?php echo $dbname;?>",
+                tablename: "<?php echo $tablename;?>",
             },
             parseData: function(resp) {
                 var data = new Array();
