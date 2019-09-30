@@ -23,14 +23,14 @@
     </div>
 </div> 
 <script type="text/html">
-    <button class="layui-btn" lay-event="edit">编辑</button>
+    <!-- <button class="layui-btn" lay-event="edit">编辑</button>
     <button class="layui-btn" lay-event="delete">删除</button>
     <button class="layui-btn" lay-event="pk">主键</button>
     <button class="layui-btn" lay-event="unique">唯一</button>
     <button class="layui-btn" lay-event="index">索引</button>
     <button class="layui-btn" lay-event="space">空间</button>
     <button class="layui-btn" lay-event="full-text-search">全文搜索</button>
-    <button class="layui-btn" lay-event="distinct">非重复值(DISTINCT)</button>
+    <button class="layui-btn" lay-event="distinct">非重复值(DISTINCT)</button> -->
 </script>
 <script>
     layui.use(["table", "jquery", "layer"], function() {

@@ -52,11 +52,8 @@ use app\widgets\HeaderMenu;
                     <dl class="layui-nav-child">
                         <!-- 二级菜单 -->
                         <dd>
-                            <a onclick="xadmin.open('个人信息','http://www.baidu.com')">个人信息</a></dd>
-                        <dd>
-                            <a onclick="xadmin.open('切换帐号','http://www.baidu.com')">切换帐号</a></dd>
-                        <dd>
-                            <a href="./login.html">退出</a></dd>
+                            <a href="#" class="logout">退出</a>
+                        </dd>
                     </dl>
                 </li>
             </ul>
@@ -130,7 +127,11 @@ use app\widgets\HeaderMenu;
                 initLeftNav();
                 form.on('select(database-select)', function(data){
                     var dbname = data.value;
-                    location.href = "/wedatabase/db/dbdesc?dbname=" + dbname + "&is_db=1&event=desc";
+                    if(!dbname) {
+                        location.href = "/weadmin";    
+                    } else {
+                        location.href = "/wedatabase/db/dbdesc?dbname=" + dbname + "&is_db=1&event=desc";
+                    }
                 })
                 function popup(message) {
                     layer.open({
@@ -138,6 +139,17 @@ use app\widgets\HeaderMenu;
                         content: message,
                     });
                 }
+                $(".logout").on("click", function() {
+                    $.post("/weadmin/adminuser/logout", {
+                        _csrf: "<?php echo \Yii::$app->request->csrfToken;?>",
+                    },function(resp) {
+                        if(resp.code == 0) {
+                            location.href = "/";
+                        } else {
+                            layer.alert("登出失败");
+                        }
+                    });
+                })
             })
         </script>
         <div class="left-nav" style="overflow: scroll">

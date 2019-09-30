@@ -9,9 +9,13 @@ use app\modules\wedatabase\actions\WETableSqlAction;
 use app\modules\wedatabase\actions\WESqlFormatAction;
 use app\modules\wedatabase\actions\WETableListAction;
 use app\modules\wedatabase\actions\WEDatabaseSqlAction;
+use app\modules\wedatabase\actions\WETableBackUpAction;
 use app\modules\wedatabase\actions\WETableColumnsAction;
 use app\modules\wedatabase\actions\WETableDataListAction;
+use app\modules\wedatabase\actions\WEBackUpFileListAction;
 use app\modules\wedatabase\actions\WEDatabaseBackUpAction;
+use app\modules\wedatabase\actions\WEDatabaseImportAction;
+use app\modules\wedatabase\actions\WEBackUpFileRemoveAction;
 
 /**
  * Default controller for the `wedatabase` module
@@ -44,6 +48,18 @@ class WEDatabaseController extends Controller {
             "dbdump" => array(
                 "class" => WEDatabaseBackUpAction::className(),
             ), 
+            // "tabledump" => array(
+            //     "class" => WETableBackUpAction::className(),
+            // ),
+            "dbimport" => array(
+                "class" => WEDatabaseImportAction::className(),
+            ),
+            "backupfile" => array(
+                "class" => WEBackUpFileListAction::className(),
+            ),
+            "removefile" => array(
+                "class" => WEBackUpFileRemoveAction::className(),
+            ),
         );
     }
 
@@ -59,6 +75,10 @@ class WEDatabaseController extends Controller {
                     "lint",
                     "sqlfmt",
                     "tablesql",
+                    "dbdump",
+                    "dbimport",
+                    "backupfile",
+                    "removefile"
                 ),
                 "rules" => array(
                     array(
@@ -71,6 +91,10 @@ class WEDatabaseController extends Controller {
                             "lint",
                             "sqlfmt",
                             "tablesql",
+                            "dbdump",
+                            "dbimport",
+                            "backupfile",
+                            "removefile"
                         ), 
                         "roles" => array("@")
                     ),

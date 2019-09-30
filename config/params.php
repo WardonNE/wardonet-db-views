@@ -13,4 +13,8 @@ return [
     "serviceTableColumnsApi" => "/db/{:dbname}/{:tablename}/cols",
     "serviceQuerySQLApi" => "/db/{:dbname}/querysql",
     "serviceDbDumpApi" => "/db/{:dbname}/backup",
+    "serviceTableDumpApi" => "/db/{:dbname}/{:tablename}/backup",
+    "serviceDbImportApi" => "/db/{:dbname}/import",
+    "serviceBackUpFileApi" => "/db/{:dbname}/backupfile",
+    "serviceBackUpFileRemoveApi" => "/db/file/remove",
 ];

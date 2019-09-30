@@ -4,9 +4,12 @@ namespace app\modules\weadmin\controllers;
 
 use Yii;
 use yii\web\Controller;
+use app\utils\WEJSONResponser;
+use yii\filters\AccessControl;
+use yii\web\MethodNotAllowedException;
 use app\modules\weadmin\forms\WEAdminLoginForm;
 use app\modules\weadmin\models\WEAdminUserModel;
-use yii\filters\AccessControl;
+
 
 /**
  * Default controller for the `weadmin` module
@@ -19,10 +22,10 @@ class WEAdminUserController extends Controller {
         return array(
             "access" => array(
                 "class" => AccessControl::className(),
-                "only" => array("login", "index"),
+                "only" => array("login", "index", "logout"),
                 "rules" => array(
                     array("allow" => true, "actions" => array("login")),
-                    array("allow" => true, "actions" => array("index"), "roles" => array("@")),
+                    array("allow" => true, "actions" => array("index","logout"), "roles" => array("@")),
                 ),
             ),
         );
@@ -58,5 +61,17 @@ class WEAdminUserController extends Controller {
                 ]);
             }
         } 
+    }
+
+    public function actionLogout() {
+        if(Yii::$app->request->isPost) {
+            if(Yii::$app->user->logout()) {
+                return WEJSONResponser::response(0, "ok", true);
+            } else {
+                return WEJSONResponser::response(1001, "登出失败", false);
+            }
+        } else {
+            throw new MethodNotAllowedException();
+        }
     }
 }
