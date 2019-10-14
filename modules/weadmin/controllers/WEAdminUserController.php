@@ -36,7 +36,8 @@ class WEAdminUserController extends Controller {
      */
     public function actionIndex() {
         $this->layout = '@app/views/layouts/adminLayout';
-        return $this->render('index');
+        // echo $this->render("index");die;
+        return $this->render('index', array());
     }
 
     public function actionLogin() {

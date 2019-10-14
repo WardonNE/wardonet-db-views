@@ -2,7 +2,7 @@
 
 return [
     'class' => 'yii\db\Connection',
-    // 'dsn' => 'mysql:host=localhost;dbname=waardonet-cs',
+    // 'dsn' => 'mysql:host=localhost;dbname=wardonet-cs',
     // 'username' => 'root',
     // 'password' => '',
     // 'charset' => 'utf8',

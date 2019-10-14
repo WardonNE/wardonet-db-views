@@ -51,18 +51,6 @@ class HeaderMenu extends Widget {
             "event" => "sql",
             "icon" => "layui-icon-fonts-code",
         ),
-        // array(
-        //     "label" => "备份",
-        //     "url" => "#",
-        //     "event" => "dump",
-        //     "icon" => "layui-icon-shrink-right",
-        // ),
-        // array(
-        //     "label" => "恢复",
-        //     "url" => "#",
-        //     "event" => "import",
-        //     "icon" => "layui-icon-spread-left",
-        // ),
     );
 
     public $is_db = 0;
@@ -73,7 +61,7 @@ class HeaderMenu extends Widget {
 
     public function run() {
         if(!$this->dbname) {
-            echo "";exit();
+            return "";
         }
         if($this->is_db) {
             foreach($this->databaseMenus as $key => $menu) {

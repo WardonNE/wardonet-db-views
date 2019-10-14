@@ -4,11 +4,25 @@
             <div class="layui-card">
                 <div class="layui-card-body ">
                     <blockquote class="layui-elem-quote">欢迎管理员：
-                        <span class="x-red">test</span>！当前时间:2018-04-25 20:50:53
+                        <span class="x-red">wardonet-db</span>！当前时间:<span id="active-time"></span>
                     </blockquote>
                 </div>
             </div>
         </div>
+        <script>
+            function getActiveTime() {
+                var date = new Date();
+                var currentDate = (date.getFullYear()<10?"0"+date.getFullYear():date.getFullYear()) + "-" + ((date.getMonth()+1)<10?"0"+(date.getMonth()+1):(date.getMonth()+1)) + "-" + (date.getDate()<10?"0"+date.getDate():date.getDate()) + " " + (date.getHours()<10?"0"+date.getHours():date.getHours()) + ":" + (date.getMinutes()<10?"0"+date.getMinutes():date.getMinutes()) + ":" + (date.getSeconds()<10?"0"+date.getSeconds():date.getSeconds())
+                layui.use("jquery", function() {
+                    var $ = layui.jquery
+                    $("#active-time").text(" " + currentDate)
+                })
+            }
+            getActiveTime();
+            setInterval(function() {
+                getActiveTime();
+            }, 1000)
+        </script>
         <div class="layui-col-md12">
             <div class="layui-card">
                 <div class="layui-card-header">数据统计</div>
@@ -119,38 +133,29 @@
                     <table class="layui-table">
                         <tbody>
                             <tr>
-                                <th>xxx版本</th>
-                                <td>1.0.180420</td></tr>
-                            <tr>
                                 <th>服务器地址</th>
-                                <td>x.xuebingsi.com</td></tr>
+                                <td><?php echo $_SERVER["HTTP_HOST"]; ?></td>
+                            </tr>
                             <tr>
                                 <th>操作系统</th>
-                                <td>WINNT</td></tr>
-                            <tr>
-                                <th>运行环境</th>
-                                <td>Apache/2.4.23 (Win32) OpenSSL/1.0.2j mod_fcgid/2.3.9</td></tr>
+                                <td><?php echo php_uname("s"); ?></td>
+                            </tr>
                             <tr>
                                 <th>PHP版本</th>
-                                <td>5.6.27</td></tr>
+                                <td><?php echo PHP_VERSION;?></td>
+                            </tr>
                             <tr>
                                 <th>PHP运行方式</th>
-                                <td>cgi-fcgi</td></tr>
+                                <td><?php echo php_sapi_name();?></td>
+                            </tr>
                             <tr>
-                                <th>MYSQL版本</th>
-                                <td>5.5.53</td></tr>
-                            <tr>
-                                <th>ThinkPHP</th>
-                                <td>5.0.18</td></tr>
-                            <tr>
-                                <th>上传附件限制</th>
-                                <td>2M</td></tr>
-                            <tr>
-                                <th>执行时间限制</th>
-                                <td>30s</td></tr>
+                                <th>Yii</th>
+                                <td><?php echo \Yii::getVersion();?></td>
+                            </tr>
                             <tr>
                                 <th>剩余空间</th>
-                                <td>86015.2M</td></tr>
+                                <td><?php echo intval(disk_free_space("/") / 1024 / 1024) . "M";?></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -163,21 +168,14 @@
                     <table class="layui-table">
                         <tbody>
                             <tr>
-                                <th>版权所有</th>
-                                <td>xuebingsi(xuebingsi)
-                                    <a href="http://x.xuebingsi.com/" target="_blank">访问官网</a></td>
-                            </tr>
-                            <tr>
                                 <th>开发者</th>
-                                <td>马志斌(113664000@qq.com)</td></tr>
+                                    <td>Wardon Wang(1730314864@qq.com)</td>
+                                </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
         <style id="welcome_style"></style>
-        <div class="layui-col-md12">
-            <blockquote class="layui-elem-quote layui-quote-nm">感谢layui,百度Echarts,jquery,本系统由x-admin提供技术支持。</blockquote></div>
     </div>
-</div>
 </div>
