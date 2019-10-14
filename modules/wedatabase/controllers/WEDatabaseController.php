@@ -48,9 +48,6 @@ class WEDatabaseController extends Controller {
             "dbdump" => array(
                 "class" => WEDatabaseBackUpAction::className(),
             ), 
-            // "tabledump" => array(
-            //     "class" => WETableBackUpAction::className(),
-            // ),
             "dbimport" => array(
                 "class" => WEDatabaseImportAction::className(),
             ),

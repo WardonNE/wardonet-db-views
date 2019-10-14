@@ -61,6 +61,9 @@ $config = [
         'wedatabase' => [
             'class' => 'app\modules\wedatabase\WEDatabaseModule',
         ],
+        'weserver' => [
+            'class' => 'app\modules\weserver\WEServerModule',
+        ],
     ],
 ];
 

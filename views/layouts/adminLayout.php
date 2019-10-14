@@ -1,7 +1,7 @@
 <?php 
-use app\widgets\DatabaseList;
 use app\utils\WEParamsUtil;
 use app\widgets\HeaderMenu;
+use app\widgets\DatabaseList;
 ?>
 <!doctype html>
 <html class="x-admin-sm">
@@ -38,6 +38,7 @@ use app\widgets\HeaderMenu;
         <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/display/autorefresh.js"></script>
         <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/edit/matchbrackets.js"></script>
         <script src="<?php echo \Yii::$app->request->baseUrl;?>/skin/lib/codemirror-5.49.0/addon/display/fullscreen.js"></script>
+        <script src="https://echarts.baidu.com/dist/echarts.min.js"></script>
     </head>
     <style>::-webkit-scrollbar{/** display: none; */}</style>
     <body class="index">

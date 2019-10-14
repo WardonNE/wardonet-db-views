@@ -6,7 +6,7 @@ return [
     "appid" => "wardonet-db-views",
     "appsecret" => "4ZgbRirnS1SpuaLWwF1bJr4ThyGjuzxAcnyQGLHwr34po74fm0eJFZpPjScYd8aj",
 
-    "serviceHost" => "http://127.0.0.1:8089",
+    "serviceHost" => "http://127.0.0.1:7777",
     "serviceDbListApi" => "/dbs",
     "serviceTableListApi" => "/db/{:dbname}/tbls",
     "serviceTableDataListApi" => "/db/{:dbname}/{:tablename}/data",
@@ -17,6 +17,8 @@ return [
     "serviceDbImportApi" => "/db/{:dbname}/import",
     "serviceBackUpFileApi" => "/db/{:dbname}/backupfile",
     "serviceBackUpFileRemoveApi" => "/db/file/remove",
+    "serviceStatusQueriesApi" => "/server/status/queries",
+    "serviceStatusVariableApi" => "/server/status/variable",
 
     "allocations" => array(
         'Com_'              => 'com',
